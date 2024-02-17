@@ -87,4 +87,43 @@
   ; 1 real number >= 0 -> 1 real number >= 0
   (* 6 (equilateralTriangleArea s)))
 
-(display (regularHexagone (read)))
+
+(define (exercise3)
+  (display (regularHexagone (read))))
+
+
+;Exercise 4
+(define (WeightedAverage v1 v2 w1 w2)
+  ; returns the weighted average of v1 and v2, with their respective weighs w1 and w2
+  ; real, real > 0 -> real
+  (/ (+ (* v1 w1) (* v2 w2)) (+ w1 w2)))
+
+(define (exercise4b)
+  ; program to get 6 inputs from the user and then calculate the average and the 
+  ; weighted average
+  ; 6 reals > 0 -> real for average and real for weigthed average
+  (display "Please write 6 values")
+  (define v1 (read)) (define v2 (read)) (define v3 (read)) 
+  (define v4 (read)) (define v5 (read)) (define v6 (read)) 
+  ; Non-weighted average, "normal average"
+  (define nonWeigthedAverage (WeightedAverage (WeightedAverage (WeightedAverage v1 v2 1 1)
+                                                               (WeightedAverage v3 v4 1 1) 
+                                                               1 1)
+                                              (WeightedAverage v5 v6 1 1)
+                                              2 1))
+  (display "The normal average is : ")
+  (display nonWeigthedAverage)
+  (newline)
+
+  ; Weighted average
+  (display "Please write 6 weigths")
+  (define w1 (read)) (define w2 (read)) (define w3 (read)) 
+  (define w4 (read)) (define w5 (read)) (define w6 (read)) 
+  (define weigthedAverage (WeightedAverage (WeightedAverage (WeightedAverage v1 v2 w1 w2)
+                                                            (WeightedAverage v3 v4 w3 w4)
+                                                            1 1)
+                                           (WeightedAverage v5 v6 w5 w6)
+                                           2 1))
+  (display "The weigthed average is : ")
+  (display weigthedAverage)
+  (newline))
