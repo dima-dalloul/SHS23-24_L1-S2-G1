@@ -9,7 +9,7 @@
 (define (char->symbol c)
   (string->symbol (string c)))
 
-(char->symbol #\a) ;;=> produces 'a
+;(char->symbol #\a) ;;=> produces 'a
 
 (define (symbol->char sym)
   (match (string->list (symbol->string sym))
@@ -17,7 +17,7 @@
     [other (error 'symbol->char 
                   "expected a one-character symbol, got: ~s" sym)])) 
 
-(symbol->char 'a) ;; => produces #\a
+;(symbol->char 'a) ;; => produces #\a
 
 ; Exercise 1
 ; a
@@ -62,3 +62,101 @@
 
 ;(display "Write a first group verb")
 ;(conjugaison (symbol->string (read)))
+
+
+(define (exercise1d)
+  ; program that gets a noun from the user, and its genre, and will display the nominal groupe
+  ; no parameter -> display strings
+  (display "Genre ? (m or f) ")
+  (define genre (symbol->string (read)))
+  (display "Noun ? ")
+  (define noun (symbol->string (read)))
+  (display (if (isVowel? (string-ref noun 0))
+               "l'"
+               (cond (( equal? genre  "m") "le ")
+                     ((equal? genre "f") "la "))))
+  (display noun)
+  (newline))
+
+;(exercise1d)
+
+; Exercise 2
+(define (max2Numbers a b)
+  ; returns the greater number between a and b
+  ; 2 real numbers -> 1 real number
+  (if (> a b)
+      a
+      b))
+
+(define (max3Numbers a b c)
+  ; returns the greatest number between a, b and c
+  ; 3 real numbers -> 1 real number
+  (max2Numbers (max2Numbers a b) c))
+
+(define (min2Numbers a b)
+  ; returns the smaller number between a and b
+  ; 2 real numbers -> 1 real number
+  (if (> a b)
+      b
+      a))
+
+(define (min3Numbers a b c)
+  ; returns the smallest number between a, b and c
+  ; 3 real numbers -> 1 real number
+  (min2Numbers (min2Numbers a b) c))
+ 
+(define (average a b)
+  ; returns the average between a and b
+  ; 2 real numbers -> 1 real number
+  (/ (+ a b) 2))
+
+(define (average3 a b c)
+  ; returns the average between a, b and c
+  ; 3 real numbers -> 1 real number
+  (/ (+ a b c) 3))
+
+(define (finalMark a b c)
+  ; returns the maximum between the average of the 3 marks and between the average
+  ; of the greatest and smallest mark
+  ; 3 real numbers -> 1 real number
+  (define average3Marks (average3 a b c))
+  (define greatestMark (max3Numbers a b c))
+  (define smallestMark (min3Numbers a b c))
+  (define averageGreatestSmallestMark (average greatestMark smallestMark))
+  (display "the final mark is ")
+  (max2Numbers average3Marks averageGreatestSmallestMark))
+
+;(finalMark 6 10 15)
+
+;Exercise 3
+(define (delta a b c)
+  ; returns the discriminant of an equation ax²+ bx + c = 0
+  ; real <> 0, 2 reals -> real
+  (- (* b b) (* 4 a c)))
+
+(define (solution a b c delta negative)
+  ; returns the solution 1 of an equation ax² + bx + c = 0
+  ; real <> 0, 2 reals, real >=0, boolean -> real
+  (/ (+ (- b) (* (sqrt delta) (if negative -1 1))) (* 2 a)))
+
+(define (exercise3)
+  ;Programme that checks if 2 equations ax²+ bx + c = 0 have a common solution
+  ; no entry -> display
+  ; a1, a2: real <> 0
+  ; b1, b2, c1, c2 : real
+  ; delta1, delta2: real, those are the discriminants
+  (display "Write a, b, c for the first equation")
+  (define a1 (read)) (define b1 (read)) (define c1 (read))
+  (display "Write a, b, c for the second equation")
+  (define a2 (read)) (define b2 (read)) (define c2 (read))
+  (define delta1 (delta a1 b1 c1))
+  (define delta2 (delta a2 b2 c2))
+  (cond ((or (< delta1 0) (< delta2 0)) (display "there is no common solution"))
+        ((or (= (solution a1 b1 c1 delta1 #f) (solution a2 b2 c2 delta2 #f))
+             (= (solution a1 b1 c1 delta1 #t) (solution a2 b2 c2 delta2 #f))
+             (= (solution a1 b1 c1 delta1 #f) (solution a2 b2 c2 delta2 #t))
+             (= (solution a1 b1 c1 delta1 #t) (solution a2 b2 c2 delta2 #t)))
+         (display "There is at least one common solution"))
+        (else (display "No common solution"))))
+
+(exercise3)
