@@ -159,4 +159,81 @@
          (display "There is at least one common solution"))
         (else (display "No common solution"))))
 
-(exercise3)
+;(exercise3)
+
+
+;Exercise 4
+(define (exercise4)
+  ; Program that emulates a calculator
+  ; 2 reals from the user and an operation -> real
+  (display "Give the operation to calculate (example: a+b) : ")
+  (define inputUser (read))
+  (define inputString (symbol->string inputUser))
+  (define a (string-ref inputString 0))
+  (define op (string-ref inputString 1))
+  (define b (string-ref inputString 2))
+  (display "Result : ")
+  (display (calculator a op b)))
+
+(define (calculator a op b)
+  ; returns the result based on the given numbers and the operation
+  ; character in {#\+, #\-, #\*, #\/}m 2 integres between 0 amd 9-> real
+  (cond ((char=? op #\+) (+ (number a) (number b)))
+        ((char=? op #\-) (- (number a) (number b)))
+        ((char=? op #\*) (* (number a) (number b)))
+        ((char=? op #\:) (/ (number a) (number b)))))
+
+(define (number n)
+  ; returns the number based on the given string
+  ; char between #\0 and #\9 -> number between 0 and 9
+  (cond ((char=? n #\0) 0)
+        ((char=? n #\1) 1)
+        ((char=? n #\2) 2)
+        ((char=? n #\3) 3)
+        ((char=? n #\4) 4)
+        ((char=? n #\5) 5)
+        ((char=? n #\6) 6)
+        ((char=? n #\7) 7)
+        ((char=? n #\8) 8)
+        (else 9)))
+
+;(exercise4)
+
+; Exercise 5
+(define (question x)
+  (begin 
+    (display "Is the number greater than ")
+    (display x)
+    (display " : (answer yes/no) ")
+    (cond ((symbol=? (read)'yes) true)(true false)))
+  )
+
+(define (result x)
+  (string-append "It's : "  (number->string x)))
+
+(define (exercise5)
+  ; program for the guessing game
+  ; no parameter -> correct guess of the program
+  (display 
+   (result  
+    (cond ((question 8)
+           (cond ((question 12)
+                  (cond ((question 14)
+                         (cond ((question 15) 16)(true 15)))
+                        (true (cond ((question 13) 14)(true 13)))))
+                 (true 
+                  (cond ((question 10)
+                         (cond ((question 11) 12)(true 11)))
+                        (true (cond ((question 9) 10)(true 9)))))))
+          (true
+           (cond ((question 4)
+                  (cond ((question 6)
+                         (cond ((question 7) 8)(true 7)))
+                        (true (cond ((question 5) 6)(true 5)))))
+                 (true 
+                  (cond ((question 2)
+                         (cond ((question 3) 4)(true 3)))
+                        (true (cond ((question 1) 2)(true 1))))))))
+    )
+   ))
+;(exercise5)
