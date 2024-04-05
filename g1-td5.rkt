@@ -85,13 +85,99 @@
         ((<= n (car l))
              (cons n l))
          (else (cons (car l) (insert n (cdr l))))))
-(insert 5 '(2 3 4 4 5 5 9 10))
+;(insert 5 '(2 3 4 4 5 5 9 10))
 
 (define (sortList l)
   ; returns a list with the same elements as l, sorted in ascending order
   ; list of integers -> ordered list of integers
   (if (null? l) l
       (insert (car l) (sortList (cdr l)))))
+;(sortList '(2 5 3 10 4 4 5 5 9 10))
+
+; Exercise 5
+; First solution : no support for accentuated letters
+(define (sentence1 ch)
+  ; returns a list of the words of ch
+  ; string -> list of strings
+  (searchWord1 ch))
+
+(define (letter? l)
+  ; returns true if l is a letter
+  ; character -> boolean
+  (and (char-ci>=? l #\a) (char-ci<=? l #\z)))
+
+;(letter? #\d)
+;(letter? #\.)
+
+(define (searchWord1 ch)
+  ; returns the list of words of ch
+  ; string -> list of strings
+  (let ((lg (string-length ch)))
+    (cond ((= lg 0) '())
+          ((letter? (string-ref ch 0)) (readWord1 (substring ch 0 1) (substring ch 1 lg)))
+          (else (searchWord1 (substring ch 1 lg))))))
+
+(define (readWord1 l ch)
+  ; returns the list of words of (string-append m ch0
+  ; l contains only LETTERS
+  ; characters, list -> list of strings
+  (let ((lg (string-length ch)))
+    (cond ((= lg 0) (list l))
+          ((letter? (string-ref ch 0)) (readWord1 (string-append l (substring ch 0 1))
+                                                  (substring ch 1 lg)))
+          (else (cons l (searchWord1 (substring ch 1 lg)))))))
 
 
-(sortList '(2 5 3 10 4 4 5 5 9 10))
+; Second solution : support for accentuated letters
+; We will specify the accepted accents
+(define (sentence2 ch l)
+  ; returns a list of the words of ch
+  ; string, list of characters -> list of strings
+  (searchWord2 ch l))
+
+(define (belongs? c l)
+  ; returns true if the character c is in the list l
+  ; character, list of characters -> boolean
+  (and (not (null? l))
+       (or (char=? c (car l))
+           (belongs? c (cdr l)))))
+
+(define (searchWord2 ch l)
+  ; returns a list of the words in ch considering the separators present in l
+  ; string, list of characters -> list of strings
+  (let ((lg (string-length ch)))
+    (cond ((= lg 0) '())
+          ((belongs? (string-ref ch 0) l) (searchWord2 (substring ch 1 lg) l))
+          (else (readWord2 (substring ch 0 1) (substring ch 1 lg) l)))))
+
+(define (readWord2 c ch l)
+  ; returns the list of words of (string-append c ch) considering the separators present in l
+  ; c contains ONLY letters
+  ; non-empty string, string, list of characters -> list of strings
+  (let ((lg (string-length ch)))
+    (cond ((= lg 0) (list c))
+          ((belongs? (string-ref ch 0) l) (cons c (searchWord2(substring ch 1 lg) l)))
+          (else (readWord2 (string-append c (substring ch 0 1)) (substring ch 1 lg) l)))))
+
+(sentence1 "Voici, par exemple, une belle phrase : des questions ?")
+(sentence2 "Voici, par exemple, une belle phrase : des questions ?" '(#\space #\. #\, #\? #\! #\: #\;))
+(sentence2 "Cette deuxième solution supporte aussi les signes diacritiques comme les lettres accentuées !" '(#\space #\. #\, #\? #\! #\: #\;))
+(sentence1 "Ce n'est absolument pas le cas pour la première solution.")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
